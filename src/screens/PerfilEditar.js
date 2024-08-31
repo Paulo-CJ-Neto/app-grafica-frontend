@@ -65,7 +65,6 @@ const PerfilEditar = (props) => {
       try {
         await saveUpdatedClient();
         props.navigation.navigate('Perfil');
-        console.log("Estado do cliente salvo no BD: ", client);
       } catch (err) {
         console.error("Erro ao salvar cliente: ", err.response?.data || err.message);
       } finally {

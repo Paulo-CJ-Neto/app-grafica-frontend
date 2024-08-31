@@ -15,7 +15,6 @@ const Produtos = props => {
 
   const onRefresh = () => {
     setRefreshing(true)
-    console.log("ta refreshando");
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
@@ -38,7 +37,7 @@ const Produtos = props => {
         <Text style={styles.title}>{props.route.params ? props.route.params.filter : 'Todos os produtos'}</Text>
         <View style={styles.containerProdutos}>
           {props.route.params
-            ? productData.filter(product => product.subtype === props.route.params.filter).map(product => <CardProtudo key={product.id} {...product} showIndividualProduct={showIndividualProduct} />)
+            ? productData.filter(product => product.subtipo === props.route.params.filter).map(product => <CardProtudo key={product.id} {...product} showIndividualProduct={showIndividualProduct} />)
             : productData.map(product => <CardProtudo key={product.id} {...product} showIndividualProduct={showIndividualProduct} />)
           }
         </View>

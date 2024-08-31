@@ -16,6 +16,7 @@ import Contato from "../screens/Contato";
 import Perfil from "../screens/Perfil";
 import Carrinho from "../screens/Carrinho";
 import ProdutoFoco from "../screens/ProdutoFoco";
+import ProdutoAdicionar from "../screens/ProdutoAdicionar";
 
 import PerfilEditar from "../screens/PerfilEditar";
 import PerfilEditarEndereco from "../screens/PerfilEditarEndereco";
@@ -139,6 +140,13 @@ const Navigator = () => {
           component={PerfilEditarEndereco}
           options={{
             headerTitle: "Editar Endereço",
+          }}
+        />
+        <Stack.Screen
+          name="ProdutoAdicionar"
+          component={ProdutoAdicionar}
+          options={{
+            headerTitle: "Adicionar Produto",
           }}
         />
       </Stack.Navigator>

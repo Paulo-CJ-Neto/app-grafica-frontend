@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { Alert } from "react-native";
 import axios from "axios";
 
 export const ProductsContext = createContext(null)
@@ -7,16 +8,23 @@ function ProductsProvider({ children }) {
   const API_URL = process.env.EXPO_PUBLIC_API_URL
 
   const [productData, setProductData] = useState(null)
+  const [productTypes, setProductTypes] = useState(null)
 
   useEffect(() => {
     fetchProducts()
 
     const intervalId = setInterval(() => {
       fetchProducts()
-    }, 10000)
+    }, 40000)
 
     return () => clearInterval(intervalId)
   }, [])
+
+  useEffect(() => {
+    if (productData) {
+      defineProductTypes()
+    }
+  }, [productData])
 
 
   const fetchProducts = async () => {
@@ -29,32 +37,23 @@ function ProductsProvider({ children }) {
     }
   }
 
-  if (productData) {
-    const types = []
-    productData.map((element) => {
-      types.includes(element.tipo) ? null : types.push(element.tipo)
-    })
-    // console.log(types);
+  const defineProductTypes = () => {
+    const result = productData.reduce((acc, produto) => {
+      const existingGroup = acc.find(group => group.type === produto.tipo);
+
+      if (existingGroup) {
+        existingGroup.data.push(produto.subtipo);
+      } else {
+        acc.push({
+          type: produto.tipo,
+          data: [produto.subtipo]
+        });
+      }
+
+      return acc
+    }, []);
+    setProductTypes(result)
   }
-
-
-
-
-
-  const [productTypes, setProductTypes] = useState([
-    {
-      type: 'Copo',
-      data: ['Copo Personalizado', 'Caneca de porcelana', 'Long drink']
-    },
-    {
-      type: 'Camisas',
-      data: ['Camiseta Unissex', 'Lisa', 'Personalizada']
-    },
-    {
-      type: 'Banner',
-      data: ['Banner 3X4', 'Banner 5X5', 'Banner YXY']
-    }
-  ])
 
   const addProductType = (newType, newData) => {
     setProductTypes(...productTypes, { type: newType, data: newData })
@@ -107,4 +106,22 @@ export default ProductsProvider
 //     desc: 'descricao de Caneca de porcelana 360° arte',
 //     img: require('./../../assets/imgs/camisa1.jpg'),
 //   },
+// ]
+
+
+
+
+// [
+//   {
+//     type: 'Copo',
+//     data: ['Copo Personalizado', 'Caneca de porcelana', 'Long drink']
+//   },
+//   {
+//     type: 'Camisas',
+//     data: ['Camiseta Unissex', 'Lisa', 'Personalizada']
+//   },
+//   {
+//     type: 'Banner',
+//     data: ['Banner 3X4', 'Banner 5X5', 'Banner YXY']
+//   }
 // ]

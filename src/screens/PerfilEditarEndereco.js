@@ -21,8 +21,6 @@ const PerfilEditarEndereco = props => {
 
   const updateAdressBD = async () => {
     if (valid) {
-      console.log(adress);
-      
       try {
         if (props.route.params.enderecoId) {
           await axios.put(`${API_URL}/api/endereco/${props.route.params.enderecoId}`, adress);
