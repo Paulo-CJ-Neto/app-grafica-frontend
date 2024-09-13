@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useRef, useState } from "react"
 import {
   View,
   Text,
@@ -12,10 +12,161 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Dimensions,
-} from "react-native";
+  Linking,
+  Button,
+  Alert,
+} from "react-native"
+import { Picker } from "@react-native-picker/picker"
+import { Modalize } from "react-native-modalize"
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import * as ImagePicker from 'expo-image-picker'
+
+import axios from "axios"
+
+import { ProductsContext } from "../contexts/productsContext"
+import { ClientContext } from "../contexts/clientContext"
+
+const API_URL = process.env.EXPO_PUBLIC_API_URL
+
+const InputField = ({ field, setField }) => {
+  return (
+    <View style={styles.inputBar}>
+      <TextInput
+        style={styles.input}
+        placeholder={field}
+        placeholderTextColor={"#AAA"}
+        multiline={true}
+        numberOfLines={2}
+        value={field}
+        onChangeText={(newText) => setField(newText)}
+      />
+    </View>
+  )
+}
 
 const ProdutoAdicionar = () => {
+  const modalizeRef1 = useRef(null)
+  const modalizeRef2 = useRef(null)
+  const modalizeRef3 = useRef(null)
+  const modalizeRef4 = useRef(null)
+
+  const [permissionDenied, setPermissionDenied] = useState(false);
+
+  const [imagem, setImagem] = useState(null)
+  const [titulo, setTitulo] = useState(null)
+  const [subtitulo, setSubtitulo] = useState(null)
+  const [descricao, setDescricao] = useState(null)
+  const [preco, setPreco] = useState(null)
+
+  const [tipo, setTipo] = useState(null)
+  const [subtipo, setSubtipo] = useState(null)
+
+  const [mensagemError, setMensagemError] = useState(null)
+
+  const { productTypes } = useContext(ProductsContext)
+  const { client } = useContext(ClientContext)
+
+  const pickImage = async () => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+      if (status !== 'granted') {
+        setPermissionDenied(true);
+        Alert.alert(
+          'Permissão Necessária',
+          'Precisamos da sua permissão para acessar a galeria.',
+          [
+            { text: 'Cancelar', style: 'cancel' },
+            { text: 'Abrir Configurações', onPress: () => Linking.openSettings() }
+          ]
+        );
+        return;
+      } else {
+        setPermissionDenied(false);
+      }
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    })
+
+    if (!result.canceled) {
+      const formData = new FormData()
+      formData.append('image', {
+        uri: result.assets[0].uri,
+        type: result.assets[0].type,
+        name: result.assets[0].fileName
+      })
+
+      try {
+        console.log("form data: ", formData);
+        
+        const response = await axios.post(`${API_URL}/api/upload`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        console.log('response.data: ', response.data);
+        
+        setImagem(response.data)
+      } catch (err) {
+        console.error('Erro ao fazer upload: ', err)
+      }
+    }
+  }
+
+  const onOpen = (modalizeRef) => {
+    modalizeRef.current?.open()
+  }
+
+  const onClose = (modalizeRef) => {
+    modalizeRef.current?.close()
+  }
+
+  const limpaCampos = () => {
+    setImagem(null)
+    setTitulo(null)
+    setSubtitulo(null)
+    setDescricao(null)
+    setPreco(null)
+    setTipo(null)
+    setSubtipo(null)
+    setMensagemError(null)
+  }
+
+  const saveProduct = async () => {
+    const product = {
+      titulo,
+      imagem,
+      subtitulo,
+      tipo,
+      subtipo,
+      descricao,
+      preco,
+      clienteId: client.id
+    }
+    try {
+      const response = await axios.post(`${API_URL}/api/produtos`, product)
+      console.log(response.data)
+      Alert.alert('Sucesso!', 'Produto adicionado')
+      limpaCampos()
+    } catch (err) {
+      setMensagemError("Todos os campos obrigatorios devem ser preenchidos")
+      console.error("nao foi possivel adicionar produto", err)
+    }
+  }
+
+  useEffect(() => {
+    if (tipo) {
+      const tipoSelecionado = productTypes.find((obj) => obj.type === tipo)
+      if (tipoSelecionado && tipoSelecionado.data.length > 0) {
+        setSubtipo(tipoSelecionado.data[0])
+      }
+    }
+  }, [tipo])
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -23,88 +174,136 @@ const ProdutoAdicionar = () => {
         keyboardVerticalOffset={100} // Ajuste o offset conforme necessário
       >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
+
+          <Modalize
+            ref={modalizeRef1}
+            modalHeight={400}
+          >
+            <Picker
+              selectedValue={tipo}
+              onValueChange={(itemValue, itemIndex) =>
+                setTipo(itemValue)
+              }>
+              {
+                productTypes.map((obj) => {
+                  return <Picker.Item label={obj.type} value={obj.type} key={obj.type} />
+                })
+              }
+            </Picker>
+          </Modalize>
+
+
+          <Modalize
+            ref={modalizeRef2}
+            modalHeight={800}
+          >
+            <View style={{ justifyContent: '' }}>
+              <View style={styles.inputModalize}>
+                <Text>Tipo: </Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="novo tipo"
+                  autoFocus={true}
+                  onChangeText={(text) => setTipo(text)}
+                  onSubmitEditing={() => onClose(modalizeRef2)}
+                  returnKeyType="done"
+                />
+              </View>
+            </View>
+          </Modalize>
+
+          <Modalize
+            ref={modalizeRef3}
+            modalHeight={400}
+          >
+            <Picker
+              selectedValue={subtipo}
+              onValueChange={(itemValue, itemIndex) =>
+                setSubtipo(itemValue)
+              }>
+              {
+                productTypes.find((obj) => obj.type === tipo)?.data?.map((item) => {
+                  return <Picker.Item label={item} key={item} value={item} />
+                })
+              }
+            </Picker>
+          </Modalize>
+
+          <Modalize
+            ref={modalizeRef4}
+            modalHeight={800}
+          >
+            <View style={{ justifyContent: '' }}>
+              <View style={styles.inputModalize}>
+                <Text>Tipo: </Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="novo subtipo"
+                  autoFocus={true}
+                  onChangeText={(text) => setSubtipo(text)}
+                  onSubmitEditing={() => onClose(modalizeRef4)}
+                  returnKeyType="done"
+                />
+              </View>
+            </View>
+          </Modalize>
+
           <Text style={styles.textMedium}>1° Escolha a foto:</Text>
-          <TouchableOpacity style={styles.img}>
+          <TouchableOpacity style={styles.img} onPress={pickImage}>
             <Image
-              source={{ uri: 'https://placehold.co/300x300/png' }}
+              source={{ uri: imagem ? imagem : 'https://placehold.co/300x300/png' }}
               style={{ width: 300, height: 300 }}
             />
+            {permissionDenied && (
+              <Button
+                title="Abrir configuracoes"
+                onPress={() => Linking.openSettings()}
+              />
+            )}
           </TouchableOpacity>
 
           <Text style={styles.textMedium}>2° Informações do produto:</Text>
 
           <Text style={styles.label}>Título do produto:</Text>
-          <View style={styles.inputBar}>
-            <TextInput
-              style={styles.input}
-              placeholder="Título"
-              placeholderTextColor={"#AAA"}
-              multiline={true}
-              numberOfLines={2}
-            />
-          </View>
+          <InputField field={titulo} setField={setTitulo} />
           <Text style={styles.label}>Subtítulo do produto:</Text>
-          <View style={styles.inputBar}>
-            <TextInput
-              style={styles.input}
-              placeholder="Subtítulo"
-              placeholderTextColor={"#AAA"}
-              multiline={true}
-              numberOfLines={2}
-            />
-          </View>
+          <InputField field={subtitulo} setField={setSubtitulo} />
           <Text style={styles.label}>Descrição do produto:</Text>
-          <View style={styles.inputBar}>
-            <TextInput
-              style={styles.input}
-              placeholder="Descrição"
-              placeholderTextColor={"#AAA"}
-              multiline={true}
-              numberOfLines={2}
-            />
-          </View>
+          <InputField field={descricao} setField={setDescricao} />
           <Text style={styles.label}>Preço do produto:</Text>
-          <View style={styles.inputBar}>
-            <TextInput
-              style={styles.input}
-              placeholder="Preço"
-              placeholderTextColor={"#AAA"}
-              multiline={true}
-              numberOfLines={2}
-            />
-          </View>
+          <InputField field={preco} setField={setPreco} />
 
           <Text style={styles.textMedium}>3° Filtragem do produto:</Text>
           <Text style={styles.label}>Tipo do produto:</Text>
           <View style={styles.inputBar}>
-            <TextInput
-              style={styles.input}
-              placeholder="Tipo"
-              placeholderTextColor={"#AAA"}
-              multiline={true}
-              numberOfLines={2}
-            />
+            <TouchableOpacity onPress={() => onOpen(modalizeRef1)} style={styles.picker}>
+              <Text style={styles.textPicker}>{tipo ? tipo : 'Selecione'}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => onOpen(modalizeRef2)} style={styles.picker}>
+              <Text style={styles.textPicker}>Novo Tipo</Text>
+            </TouchableOpacity>
+
           </View>
           <Text style={styles.label}>Subtipo do produto:</Text>
           <View style={styles.inputBar}>
-            <TextInput
-              style={styles.input}
-              placeholder="Subtipo"
-              placeholderTextColor={"#AAA"}
-              multiline={true}
-              numberOfLines={2}
-            />
+            <TouchableOpacity onPress={() => onOpen(modalizeRef3)} style={[styles.picker, !tipo ? { backgroundColor: 'gray' } : null]} disabled={!tipo} >
+              <Text style={styles.textPicker}>{tipo ? subtipo : 'Selecione'}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => onOpen(modalizeRef4)} style={[styles.picker, !tipo ? { backgroundColor: 'gray' } : null]} disabled={!tipo}>
+              <Text style={styles.textPicker}>Novo Subtipo</Text>
+            </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={saveProduct}>
             <Icon name="plus-circle" size={25} color="#000" />
             <Text style={styles.add}>Adicionar</Text>
           </TouchableOpacity>
+          <Text style={styles.error}>{mensagemError}</Text>
         </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -139,6 +338,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 5,
     flexWrap: 'wrap',
+    justifyContent: 'space-evenly'
   },
   label: {
     marginTop: 5,
@@ -160,7 +360,33 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontFamily: 'Poppins-Medium',
     fontSize: 17
-  }
-});
+  },
+  picker: {
+    width: '45%',
+    height: 40,
+    backgroundColor: '#339926',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 6,
 
-export default ProdutoAdicionar;
+  },
+  textPicker: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 18,
+  },
+  inputModalize: {
+    flex: 1,
+    height: 150,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 20
+  },
+  error: {
+    color: 'red',
+    fontFamily: 'Poppins-Regular',
+    alignSelf: 'center',
+    marginTop: 10
+  }
+})
+
+export default ProdutoAdicionar

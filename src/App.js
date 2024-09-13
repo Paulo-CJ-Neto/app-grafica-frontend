@@ -23,12 +23,12 @@ export default function App() {
   fetchFonts()
 
   return (
+    // <Teste/>
     <ValidProvider>
       <ClientProvider>
         <AdressProvider>
           <ProductsProvider>
             <Navigator />
-            {/* <Teste/> */}
           </ProductsProvider>
         </AdressProvider>
       </ClientProvider >

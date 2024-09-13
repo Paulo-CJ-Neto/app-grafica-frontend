@@ -42,7 +42,7 @@ function ProductsProvider({ children }) {
       const existingGroup = acc.find(group => group.type === produto.tipo);
 
       if (existingGroup) {
-        existingGroup.data.push(produto.subtipo);
+        existingGroup.data.includes(produto.subtipo) ? null : existingGroup.data.push(produto.subtipo);
       } else {
         acc.push({
           type: produto.tipo,

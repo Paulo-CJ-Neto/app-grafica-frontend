@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 
 const CardProduto = props => {
+  const [loading, setLoading] = useState(false)
 
   return (
     <TouchableOpacity
@@ -16,10 +18,14 @@ const CardProduto = props => {
       onPress={() => props.showIndividualProduct(props.id)}
     >
       <View style={styles.container}>
-        <Image
-          source={{ uri: props.imagem }}
-          style={styles.img}
-        />
+        { !loading
+          ? < Image
+            source={{ uri: props.imagem }}
+            style={styles.img}
+            onLoad={() => setLoading(false)}
+          />
+          : <ActivityIndicator size={"large"}  style={styles.img}/>
+        }
         <Text style={styles.title} numberOfLines={2}>{props.titulo}</Text>
         <View style={styles.button}>
           <Text style={styles.textButton}>+ Detalhes</Text>

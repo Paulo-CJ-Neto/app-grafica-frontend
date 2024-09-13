@@ -6,13 +6,15 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 
 import { ProductsContext } from "../contexts/productsContext";
 import { Icon } from "react-native-elements";
 
 const ProdutoFoco = props => {
+  const [loading, setLoading] = useState(false)
   const [quantidade, setQuantidade] = useState(0)
 
   const productData = useContext(ProductsContext).productData
@@ -22,7 +24,14 @@ const ProdutoFoco = props => {
     <ScrollView style={styles.container}>
       <View style={styles.section}>
         <Text style={styles.title}>{chosenProduct.titulo}</Text>
-        <Image style={styles.img} source={{ uri: chosenProduct.imagem, height: 350, width: 350 }} />
+        { !loading
+          ? <Image 
+            style={styles.img} 
+            source={{ uri: chosenProduct.imagem, height: 350, width: 350 }} 
+            onLoad={() => setLoading(false)}
+          />
+          : <ActivityIndicator size={"large"} style={styles.img} />
+        }
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.infoLabel}>Informações sobre o produto:</Text>

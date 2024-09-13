@@ -1,63 +1,38 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
-import {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetModalProvider,
-} from '@gorhom/bottom-sheet';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+// import React, { useState } from 'react';
+// import { View, StyleSheet } from 'react-native';
+// import DropDownPicker from 'react-native-dropdown-picker';
 
-const App = () => {
-  // ref
-  const bottomSheetModalRef = useRef(null);
+// const Teste = () => {
+//   const [open, setOpen] = useState(false);
+//   const [value, setValue] = useState(null);
+//   const [items, setItems] = useState([
+//     { label: 'Opção 1', value: 'opcao1' },
+//     { label: 'Opção 2', value: 'opcao2' },
+//     { label: 'Opção 3', value: 'opcao3' },
+//     { label: 'Opção 4', value: 'opcao4' },
+//   ]);
 
-  // variables
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
+//   return (
+//     <View style={styles.container}>
+//       <DropDownPicker
+//         open={open}
+//         value={value}
+//         items={items}
+//         setOpen={setOpen}
+//         setValue={setValue}
+//         setItems={setItems}
+//         placeholder="Selecione uma opção"
+//       />
+//     </View>
+//   );
+// };
 
-  // callbacks
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
-  const handleSheetChanges = useCallback((index) => {
-  }, []);
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     paddingHorizontal: 16,
+//     justifyContent: 'center',
+//   },
+// });
 
-  // renders
-  return (
-    <GestureHandlerRootView>
-      <BottomSheetModalProvider>
-        <View style={styles.container}>
-          <Button
-            onPress={handlePresentModalPress}
-            title="Present Modal"
-            color="black"
-          />
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={1}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}
-          >
-            <BottomSheetView style={styles.contentContainer}>
-              <Text>Awesome 🎉</Text>
-            </BottomSheetView>
-          </BottomSheetModal>
-        </View>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    justifyContent: 'center',
-    backgroundColor: 'grey',
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-});
-
-export default App;
+// export default Teste;
