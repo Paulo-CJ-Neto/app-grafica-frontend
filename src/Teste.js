@@ -1,38 +1,54 @@
-// import React, { useState } from 'react';
-// import { View, StyleSheet } from 'react-native';
-// import DropDownPicker from 'react-native-dropdown-picker';
+import React, { useState } from 'react';
+import { Modal, View, Text, Button, StyleSheet } from 'react-native';
 
-// const Teste = () => {
-//   const [open, setOpen] = useState(false);
-//   const [value, setValue] = useState(null);
-//   const [items, setItems] = useState([
-//     { label: 'Opção 1', value: 'opcao1' },
-//     { label: 'Opção 2', value: 'opcao2' },
-//     { label: 'Opção 3', value: 'opcao3' },
-//     { label: 'Opção 4', value: 'opcao4' },
-//   ]);
+const ModalExample = () => {
+  const [modalVisible, setModalVisible] = useState(false);
 
-//   return (
-//     <View style={styles.container}>
-//       <DropDownPicker
-//         open={open}
-//         value={value}
-//         items={items}
-//         setOpen={setOpen}
-//         setValue={setValue}
-//         setItems={setItems}
-//         placeholder="Selecione uma opção"
-//       />
-//     </View>
-//   );
-// };
+  return (
+    <View style={styles.container}>
+      <Button title="Abrir Modal" onPress={() => setModalVisible(true)} />
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     paddingHorizontal: 16,
-//     justifyContent: 'center',
-//   },
-// });
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>Este é um modal!</Text>
+            <Button title="Fechar Modal" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
 
-// export default Teste;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 10,
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});
+
+export default ModalExample;

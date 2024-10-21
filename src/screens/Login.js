@@ -66,13 +66,13 @@ const Login = props => {
       props.navigation.canGoBack(false)
       clientContext.setClient(client.data)
       limparCampos()
+      adressContext.setIsLoggedIn(true)
     } catch (err) {
       setMensagemErro("Não foi encontrado nenhum registro!")
       if (err.response) {
         setMensagemErro(err.response.data)
       }
     }
-    adressContext.setIsLoggedIn(true)
   }
 
   const resetKeyboardAndBottomSheet = () => {

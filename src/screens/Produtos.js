@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   View,
   Text,
@@ -9,23 +9,28 @@ import {
 
 import CardProtudo from './../components/CardProduto'
 import { ProductsContext } from "../contexts/productsContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Produtos = props => {
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = () => {
     setRefreshing(true)
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-    
+    fetchProducts()
+    setRefreshing(false)
   }
 
-  const productData = useContext(ProductsContext).productData
+  const { productData, fetchProducts } = useContext(ProductsContext)
 
   const showIndividualProduct = (id) => {
     props.navigation.navigate('ProdutoFoco', { id })
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      onRefresh()
+    }, [])
+  )
 
   return (
     <View>
@@ -33,6 +38,7 @@ const Produtos = props => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        contentContainerStyle={{ minHeight: '100%' }}
       >
         <Text style={styles.title}>{props.route.params ? props.route.params.filter : 'Todos os produtos'}</Text>
         <View style={styles.containerProdutos}>
@@ -52,15 +58,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
+    width: '100%',
+    height: '100%'
   },
   title: {
     fontFamily: 'Poppins-SemiBold',
     fontSize: 20,
     marginVertical: 20,
     marginHorizontal: 16
-  },
-  subtitle: {
-
   },
 })
 

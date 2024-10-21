@@ -1,49 +1,91 @@
-import React from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
   Image,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+  Modal,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  TextInput,
+  Keyboard
 } from "react-native";
 import { Icon } from "react-native-elements";
+import { ClientContext } from "../contexts/clientContext";
 
-const ItemCarrinho = props => {
+const API_URL = process.env.EXPO_PUBLIC_API_URL
 
-  const data = [
-    {
-      img: require('./../../assets/imgs/copo1.jpg'),
-      name: 'Copo Festa 480 ml (Arte 360°)',
-      qtd: 10
-    },
-    {
-      img: require('./../../assets/imgs/copo2.jpg'),
-      name: 'Copo Festa 480 ml (Arte 360°)',
-      qtd: 20
-    },
-    {
-      img: require('./../../assets/imgs/copo3.jpg'),
-      name: 'Copo Festa 480 ml (Arte 360°)',
-      qtd: 15
-    },
-  ]
+const ItemCarrinho = ({ infoCartItem, setModalVisible, setCartItemDetails }) => {
+
+  const { deleteProductFromClientCart } = useContext(ClientContext)
+
+  const [loading, setLoading] = useState(true)
+  const [product, setProduct] = useState(null)
+  
+
+  useEffect(() => {
+    const selectProduct = async () => {
+      try {
+        const result = await axios.get(`${API_URL}/api/produtos/${infoCartItem.produtoId}`)
+        setProduct(result.data)
+        setLoading(false)
+      } catch (err) {
+        console.error(`Não foi possivel buscar o produto de id ${infoCartItem.produtoId}`, err)
+      }
+    }
+
+    selectProduct()
+  }, [infoCartItem.produtoId])
 
   return (
     <View style={styles.container}>
       <View style={styles.containerImg}>
-        <Image
-          source={props.img}
+        {loading && (
+          <ActivityIndicator size={"large"} style={styles.img} color={"#0000ff"} />
+        )}
+        < Image
+          source={{ uri: product?.imagem }}
           style={styles.img}
+          onLoadEnd={() => setLoading(false)}
         />
       </View>
-      <Text style={styles.title}>{props.name}</Text>
-      <View style={styles.containerQtd}>
-        <Text>QTD: </Text>
-        <Text style={styles.qtd}>{props.qtd}</Text>
-      </View>
-      <TouchableOpacity style={styles.icon}>
+      <Text style={styles.title}>{product?.titulo}</Text>
+      <TouchableOpacity
+        onPress={() => {
+          setCartItemDetails(infoCartItem)
+          setModalVisible(true)
+        }}
+        style={styles.icon}
+      >
         <Icon
-          name="delete-forever"
+          name="file-document"
+          type="material-community"
+          size={30}
+          color="#495057"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.icon} onPress={() => {
+        Alert.alert("Excluir item", "deseja excluir o item do carrinho?", [
+          {
+            text: "Não",
+            isPreferred: true,
+            onPress: () => { },
+            style: "cancel"
+          },
+          {
+            text: "Excluir",
+            onPress: () => deleteProductFromClientCart(infoCartItem),
+            style: "destructive"
+          },
+        ])
+      }}>
+        <Icon
+          name="delete"
           type="material-community"
           size={30}
           color="#D4111C"
@@ -71,7 +113,8 @@ const styles = StyleSheet.create({
   containerImg: {
     width: '30%',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: '100%'
   },
   img: {
     resizeMode: 'contain',
@@ -81,15 +124,13 @@ const styles = StyleSheet.create({
   icon: {
     width: '15%',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  containerQtd: {
-    width: '15%',
+  indicator: {
+    height: 80,
+    width: 80,
+    alignSelf: 'center',
   },
-  qtd: {
-    fontFamily: 'Poppins-Bold',
-    fontSize: 18
-  }
+
 })
 
 export default ItemCarrinho

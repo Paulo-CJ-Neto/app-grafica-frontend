@@ -11,22 +11,21 @@ function AdressProvider({ children }) {
   const [adress, setAdress] = useState({})
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  useEffect(() => {
-    const fetchAdress = async () => {
-      if (client && client.enderecoId) {
-        try {
-          const endereco = (await axios.get(`${API_URL}/api/endereco/${client.enderecoId}`)).data
-          setAdress(endereco)
-        } catch (err) {
-          console.error('adressContext', err);
-        }
+  const fetchAdress = async () => {
+    if (client && client.enderecoId) {
+      try {
+        const endereco = (await axios.get(`${API_URL}/api/endereco/${client.enderecoId}`)).data
+        setAdress(endereco)
+      } catch (err) {
+        console.error('adressContext', err);
       }
     }
+  }
 
+  useEffect(() => {
     client ? fetchAdress() : null
-    
   }, [isLoggedIn])
-  
+
   return (
     <AdressContext.Provider value={{ adress, setAdress, setIsLoggedIn }}>
       {children}

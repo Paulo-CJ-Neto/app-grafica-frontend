@@ -26,6 +26,8 @@ import axios from "axios"
 import { ProductsContext } from "../contexts/productsContext"
 import { ClientContext } from "../contexts/clientContext"
 
+import pickImage from "../utils/pickImage"
+
 const API_URL = process.env.EXPO_PUBLIC_API_URL
 
 const InputField = ({ field, setField }) => {
@@ -57,6 +59,7 @@ const ProdutoAdicionar = () => {
   const [subtitulo, setSubtitulo] = useState(null)
   const [descricao, setDescricao] = useState(null)
   const [preco, setPreco] = useState(null)
+  const [deleteHash, setDeleteHash] = useState(null)
 
   const [tipo, setTipo] = useState(null)
   const [subtipo, setSubtipo] = useState(null)
@@ -65,57 +68,6 @@ const ProdutoAdicionar = () => {
 
   const { productTypes } = useContext(ProductsContext)
   const { client } = useContext(ClientContext)
-
-  const pickImage = async () => {
-    if (Platform.OS !== 'web') {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-      if (status !== 'granted') {
-        setPermissionDenied(true);
-        Alert.alert(
-          'Permissão Necessária',
-          'Precisamos da sua permissão para acessar a galeria.',
-          [
-            { text: 'Cancelar', style: 'cancel' },
-            { text: 'Abrir Configurações', onPress: () => Linking.openSettings() }
-          ]
-        );
-        return;
-      } else {
-        setPermissionDenied(false);
-      }
-    }
-
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    })
-
-    if (!result.canceled) {
-      const formData = new FormData()
-      formData.append('image', {
-        uri: result.assets[0].uri,
-        type: result.assets[0].type,
-        name: result.assets[0].fileName
-      })
-
-      try {
-        console.log("form data: ", formData);
-        
-        const response = await axios.post(`${API_URL}/api/upload`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-        console.log('response.data: ', response.data);
-        
-        setImagem(response.data)
-      } catch (err) {
-        console.error('Erro ao fazer upload: ', err)
-      }
-    }
-  }
 
   const onOpen = (modalizeRef) => {
     modalizeRef.current?.open()
@@ -134,6 +86,7 @@ const ProdutoAdicionar = () => {
     setTipo(null)
     setSubtipo(null)
     setMensagemError(null)
+    setDeleteHash(null)
   }
 
   const saveProduct = async () => {
@@ -145,11 +98,11 @@ const ProdutoAdicionar = () => {
       subtipo,
       descricao,
       preco,
+      deleteHash,
       clienteId: client.id
     }
     try {
       const response = await axios.post(`${API_URL}/api/produtos`, product)
-      console.log(response.data)
       Alert.alert('Sucesso!', 'Produto adicionado')
       limpaCampos()
     } catch (err) {
@@ -173,8 +126,9 @@ const ProdutoAdicionar = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={100} // Ajuste o offset conforme necessário
       >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-
+        <ScrollView contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps='handled'
+        >
           <Modalize
             ref={modalizeRef1}
             modalHeight={400}
@@ -249,7 +203,7 @@ const ProdutoAdicionar = () => {
           </Modalize>
 
           <Text style={styles.textMedium}>1° Escolha a foto:</Text>
-          <TouchableOpacity style={styles.img} onPress={pickImage}>
+          <TouchableOpacity style={styles.img} onPress={() => pickImage(setPermissionDenied, setImagem, setDeleteHash)}>
             <Image
               source={{ uri: imagem ? imagem : 'https://placehold.co/300x300/png' }}
               style={{ width: 300, height: 300 }}
@@ -372,7 +326,7 @@ const styles = StyleSheet.create({
   },
   textPicker: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 18,
+    fontSize: 13,
   },
   inputModalize: {
     flex: 1,
