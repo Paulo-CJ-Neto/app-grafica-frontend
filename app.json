@@ -4,24 +4,38 @@
     "slug": "app-grafica",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/imgs/logo2.png",
+    "icon": "./assets/imgs/logo3.png",
     "userInterfaceStyle": "light",
+    "platforms": ["ios", "android"],
+    "build": {
+      "android": {
+        "releaseChannel": "default"
+      }
+    },
     "splash": {
-      "image": "./assets/imgs/logo2.png",
+      "image": "./assets/imgs/logo3.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.paulocjneto.appgrafica"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/imgs/logo2.png",
+        "foregroundImage": "./assets/imgs/logo3.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.paulocjneto.appgrafica"
     },
     "web": {
-      "favicon": "./assets/imgs/logo2.png"
-    }
+      "favicon": "./assets/imgs/logo3.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e1e1365d-5f40-44b0-aedc-4326594a32ae"
+      }
+    },
+    "newArchEnabled": true
   }
 }

@@ -26,7 +26,7 @@ function ProductsProvider({ children }) {
       const response = await axios.get(`${API_URL}/api/produtos`)
       setProductData(response.data)
     } catch (err) {
-      console.error(err);
+      console.error(err.response || err.message);
       Alert.alert('Vish', 'Não foi possivel buscar os produtos')
     }
   }

@@ -19,6 +19,8 @@ import { AdressContext } from "../contexts/adressContext"
 
 import axios from "axios"
 const API_URL = process.env.EXPO_PUBLIC_API_URL
+console.log(API_URL);
+
 
 const backgroundBlur = require("../../assets/imgs/background_blur.png")
 const logo = require("../../assets/imgs/logo2.png")

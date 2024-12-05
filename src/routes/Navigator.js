@@ -55,22 +55,23 @@ const Navigator = () => {
           name="Home"
           component={Home}
           options={(props) => ({
-            headerLeft: () => (
-              <View style={{ flexDirection: 'row', justifyContent: "space-around", width: 150 }}>
-                <Icon
-                  name="cog-outline"
-                  type="material-community"
-                  size={30}
-                  onPress={() => { }}
-                />
-                <Icon
-                  name="bell-outline"
-                  type="material-community"
-                  size={30}
-                  onPress={() => navigation.navigate('Notificacoes')}
-                />
-              </View>
-            ),
+            headerLeft: () => {},
+            // headerLeft: () => (
+            //   <View style={{ flexDirection: 'row', justifyContent: "space-around", width: 150 }}>
+            //     <Icon
+            //       name="cog-outline"
+            //       type="material-community"
+            //       size={30}
+            //       onPress={() => { }}
+            //     />
+            //     <Icon
+            //       name="bell-outline"
+            //       type="material-community"
+            //       size={30}
+            //       onPress={() => navigation.navigate('Notificacoes')}
+            //     />
+            //   </View>
+            // ),
             headerRight: () => (
               <View style={{ flexDirection: 'row', justifyContent: "space-around", width: 150 }}>
                 <Icon
