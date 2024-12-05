@@ -56,38 +56,7 @@ const Navigator = () => {
           component={Home}
           options={(props) => ({
             headerLeft: () => {},
-            // headerLeft: () => (
-            //   <View style={{ flexDirection: 'row', justifyContent: "space-around", width: 150 }}>
-            //     <Icon
-            //       name="cog-outline"
-            //       type="material-community"
-            //       size={30}
-            //       onPress={() => { }}
-            //     />
-            //     <Icon
-            //       name="bell-outline"
-            //       type="material-community"
-            //       size={30}
-            //       onPress={() => navigation.navigate('Notificacoes')}
-            //     />
-            //   </View>
-            // ),
-            headerRight: () => (
-              <View style={{ flexDirection: 'row', justifyContent: "space-around", width: 150 }}>
-                <Icon
-                  name="account-outline"
-                  type="material-community"
-                  size={30}
-                  onPress={() => props.navigation.navigate('Perfil')}
-                />
-                <Icon
-                  name="cart-outline"
-                  type="material-community"
-                  size={30}
-                  onPress={() => props.navigation.navigate('Carrinho')}
-                />
-              </View>
-            ),
+            headerRight: () => {},
             gestureEnabled: false
           })}
         />
