@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker'
-const API_URL = process.env.EXPO_PUBLIC_API_URL
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 
 const pickImage = async (setPermissionDenied, setImagem, setDeleteHash) => {
   if (Platform.OS !== 'web') {

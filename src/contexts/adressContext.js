@@ -1,11 +1,11 @@
 import React, { createContext, useEffect, useState, useContext } from "react";
 import { ClientContext } from "./clientContext";
 import axios from "axios";
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 
 export const AdressContext = createContext()
 
 function AdressProvider({ children }) {
-  const API_URL = process.env.EXPO_PUBLIC_API_URL
   const client = useContext(ClientContext).client
 
   const [adress, setAdress] = useState({})

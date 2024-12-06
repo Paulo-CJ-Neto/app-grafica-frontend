@@ -12,8 +12,7 @@ import { AdressContext } from "../contexts/adressContext";
 import { ValidContext } from "../contexts/validationContext";
 import InputPerfilEditar from "../components/InputPerfilEditar";
 import axios from "axios";
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 
 const PerfilEditarEndereco = props => {
   const { adress } = useContext(AdressContext);

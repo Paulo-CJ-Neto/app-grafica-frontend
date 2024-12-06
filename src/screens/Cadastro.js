@@ -14,6 +14,7 @@ import {
 import BottomSheet from "@gorhom/bottom-sheet"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { Icon } from 'react-native-elements'
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 
 import axios from "axios"
 
@@ -22,7 +23,6 @@ const logo = require("../../assets/imgs/logo2.png")
 const buttonCadastrar = require("../../assets/imgs/buttonCadastrar.png")
 
 const Login = (props) => {
-  const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   const bottomSheetRef = useRef(null)
 

@@ -11,6 +11,7 @@ import {
   Alert,
   Keyboard,
 } from "react-native"
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 import BottomSheet from "@gorhom/bottom-sheet"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { Icon } from 'react-native-elements'
@@ -18,9 +19,6 @@ import { ClientContext } from "../contexts/clientContext";
 import { AdressContext } from "../contexts/adressContext"
 
 import axios from "axios"
-const API_URL = process.env.EXPO_PUBLIC_API_URL
-console.log(API_URL);
-
 
 const backgroundBlur = require("../../assets/imgs/background_blur.png")
 const logo = require("../../assets/imgs/logo2.png")
@@ -28,7 +26,6 @@ const buttonAcessar = require("../../assets/imgs/Button-acessar.png")
 
 
 const Login = props => {
-
   const [email, setEmail] = useState('paulocjnetopcjn@gmail.com')
   const [senha, setSenha] = useState('P22072004n')
   const [check, setCheck] = useState(false)

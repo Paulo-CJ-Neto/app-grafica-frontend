@@ -16,8 +16,8 @@ import InputPerfilEditar from "../components/InputPerfilEditar";
 import axios from "axios";
 import { ValidContext } from "../contexts/validationContext";
 import { useFocusEffect } from "@react-navigation/native";
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
 const fotoPerfil = require('./../../assets/imgs/perfil/eu_na_bis.jpg');
 
 const PerfilEditar = (props) => {

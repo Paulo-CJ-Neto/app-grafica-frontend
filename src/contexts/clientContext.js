@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 
 export const ClientContext = createContext()
 

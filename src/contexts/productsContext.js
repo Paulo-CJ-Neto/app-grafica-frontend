@@ -1,11 +1,11 @@
 import React, { createContext, useState, useEffect } from "react";
 import { Alert } from "react-native";
 import axios from "axios";
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 
 export const ProductsContext = createContext(null)
 
 function ProductsProvider({ children }) {
-  const API_URL = process.env.EXPO_PUBLIC_API_URL
 
   const [productData, setProductData] = useState(null)
   const [productTypes, setProductTypes] = useState(null)

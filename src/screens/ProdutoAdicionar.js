@@ -28,7 +28,7 @@ import { ClientContext } from "../contexts/clientContext"
 
 import pickImage from "../utils/pickImage"
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 
 const InputField = ({ field, setField }) => {
   return (

@@ -15,9 +15,9 @@ import { ClientContext } from "../contexts/clientContext";
 import { AdressContext } from "../contexts/adressContext"
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 
 const fotoPerfil = require('./../../assets/imgs/perfil/eu_na_bis.jpg')
-const API_URL = process.env.EXPO_PUBLIC_API_URL
 
 const Perfil = props => {
 

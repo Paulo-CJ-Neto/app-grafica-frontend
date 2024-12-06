@@ -23,8 +23,7 @@ import { ClientContext } from "../contexts/clientContext"
 import { Icon } from "react-native-elements";
 import axios from "axios";
 import pickImage from "../utils/pickImage";
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 
 const ProdutoFoco = props => {
 

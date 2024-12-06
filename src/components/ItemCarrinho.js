@@ -15,10 +15,9 @@ import {
   TextInput,
   Keyboard
 } from "react-native";
+import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
 import { Icon } from "react-native-elements";
 import { ClientContext } from "../contexts/clientContext";
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL
 
 const ItemCarrinho = ({ infoCartItem, setModalVisible, setCartItemDetails }) => {
 
