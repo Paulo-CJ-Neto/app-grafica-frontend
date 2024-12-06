@@ -65,7 +65,7 @@ const Login = (props) => {
       props.navigation.navigate('Login')
     } catch (err) {
       if (err.response) {
-        setMensagemErro("Deu ruim! Avise o dono por favor!")
+        setMensagemErro(err.response.data)
         console.error(err.response.data);
       }
     }
