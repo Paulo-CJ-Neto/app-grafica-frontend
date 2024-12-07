@@ -26,8 +26,8 @@ const buttonAcessar = require("../../assets/imgs/Button-acessar.png")
 
 
 const Login = props => {
-  const [email, setEmail] = useState('')
-  const [senha, setSenha] = useState('')
+  const [email, setEmail] = useState('netoben10@gmail.com')
+  const [senha, setSenha] = useState('P22072004n')
   const [check, setCheck] = useState(false)
   const [checkStyle, setCheckStyle] = useState('checkbox-blank-outline')
   const [mensagemErro, setMensagemErro] = useState('')
