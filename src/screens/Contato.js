@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -9,9 +9,12 @@ import {
   TouchableOpacity,
   ScrollView,
   Linking,
-  Alert
+  Alert,
+  Button
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+import { useFocusEffect } from "@react-navigation/native";
 
 const bgMapa = require('./../../assets/imgs/contato/bgMapa.png');
 const buttonInstagram = require('./../../assets/imgs/contato/buttonInstagram.png');
@@ -23,8 +26,24 @@ const stringWpp = "https://wa.me/5521988808161?text=Vim pelo aplicativo da gráf
 const stringInsta = "https://www.instagram.com/agraficadoseventos/";
 const stringFB = "https://www.facebook.com/agraficadoseventos1?locale=pt_BR";
 const stringSite = "https://agraficadoseventos.com.br/";
-const latitude = -22.911433820206216;
-const longitude = -43.54594598554233;
+const stringMaps = "https://www.google.com/maps/search/?api=1&query=R.+Mora,+1277+-+Campo+Grande,+Rio+de+Janeiro+-+RJ,+23052-510";
+
+const latitude = -22.911433820206216
+const longitude = -43.54594598554233
+
+const getPermission = async (setHasPermission) => {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status === 'granted') {
+    setHasPermission(true)
+  }
+};
+
+const abrirConfiguracoes = () => {
+  Linking.openSettings().catch(() => {
+    Alert.alert('Não foi possível abrir as configurações.');
+  });
+};
+
 
 const openWaze = async () => {
   const url = `waze://?ll=${latitude},${longitude}&navigate=yes`;
@@ -60,6 +79,12 @@ const OpenURLButton = ({ url, imgSource }) => {
 };
 
 const Contato = () => {
+  const [hasPermission, setHasPermission] = useState(false)
+
+  useFocusEffect(useCallback(() => {
+    getPermission(setHasPermission)
+  }, []))
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -73,6 +98,34 @@ const Contato = () => {
           </Text>
         </View>
 
+      <ImageBackground style={styles.bgMapa} source={bgMapa} >
+        <View style={styles.mapContainer}>
+          {
+            hasPermission ? (
+              <MapView
+                zoomEnabled
+                style={styles.map}
+                initialRegion={{
+                  latitude: latitude,
+                  longitude: longitude,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+              >
+                <Marker
+                  coordinate={{ latitude: latitude, longitude: longitude }}
+                  title="Endereço da Gráfica"
+                />
+              </MapView>
+            ) : (
+              <View style={styles.containerMapa}>
+                <Text style={styles.subtitle}> Permissão de localização necessária para mostrar o mapa. </Text>
+                <Button title="Abrir configurações" color={"blue"} onPress={() => abrirConfiguracoes()} />
+              </View>
+            )
+          }
+        </View>
+      </ImageBackground>
         <ImageBackground style={styles.bgMapa} source={bgMapa} >
           <View style={styles.mapContainer}>
             <MapView
@@ -133,6 +186,11 @@ const styles = StyleSheet.create({
   bgMapa: {
     justifyContent: 'center',
     height: 320
+  },
+  containerMapa: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   containerContatos: {
     marginHorizontal: 80,
