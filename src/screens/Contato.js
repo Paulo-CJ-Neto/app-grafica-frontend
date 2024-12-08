@@ -126,25 +126,6 @@ const Contato = () => {
           }
         </View>
       </ImageBackground>
-        <ImageBackground style={styles.bgMapa} source={bgMapa} >
-          <View style={styles.mapContainer}>
-            <MapView
-              zoomEnabled
-              style={styles.map}
-              initialRegion={{
-                latitude: latitude,
-                longitude: longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            >
-              <Marker
-                coordinate={{ latitude: latitude, longitude: longitude }}
-                title="Endereço da Gráfica"
-              />
-            </MapView>
-          </View>
-        </ImageBackground>
 
         <Text style={styles.title}>Contatos:</Text>
         <View style={styles.containerContatos}>
