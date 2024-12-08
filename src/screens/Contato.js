@@ -7,13 +7,13 @@ import {
   ImageBackground,
   SafeAreaView,
   TouchableOpacity,
+  ScrollView,
   Linking,
   Alert
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 const bgMapa = require('./../../assets/imgs/contato/bgMapa.png');
-const mapa = require('./../../assets/imgs/contato/mapa.png');
 const buttonInstagram = require('./../../assets/imgs/contato/buttonInstagram.png');
 const buttonWpp = require('./../../assets/imgs/contato/buttonWpp.png');
 const buttonFB = require('./../../assets/imgs/contato/buttonFB.png');
@@ -23,10 +23,8 @@ const stringWpp = "https://wa.me/5521988808161?text=Vim pelo aplicativo da gráf
 const stringInsta = "https://www.instagram.com/agraficadoseventos/";
 const stringFB = "https://www.facebook.com/agraficadoseventos1?locale=pt_BR";
 const stringSite = "https://agraficadoseventos.com.br/";
-const stringMaps = "https://www.google.com/maps/search/?api=1&query=R.+Mora,+1277+-+Campo+Grande,+Rio+de+Janeiro+-+RJ,+23052-510";
-
-const latitude = -22.911433820206216
-const longitude = -43.54594598554233
+const latitude = -22.911433820206216;
+const longitude = -43.54594598554233;
 
 const openWaze = async () => {
   const url = `waze://?ll=${latitude},${longitude}&navigate=yes`;
@@ -63,59 +61,58 @@ const OpenURLButton = ({ url, imgSource }) => {
 
 const Contato = () => {
   return (
-    <SafeAreaView>
-      <Text style={styles.title}>Endereço:</Text>
-      <View style={styles.containerEndereço}>
-        <Text style={styles.subtitle} selectable>
-          R. Mora, 1277 - Campo Grande, Rio de Janeiro - RJ, 23052-510
-          <TouchableOpacity onPress={openWaze}>
-            <Text style={styles.wazeText}>Abrir no Waze?</Text>
-          </TouchableOpacity>
-        </Text>
-
-      </View>
-
-      <ImageBackground style={styles.bgMapa} source={bgMapa} >
-        <View style={styles.mapContainer}>
-          <MapView
-            zoomEnabled
-            style={styles.map}
-            initialRegion={{
-              latitude: latitude, 
-              longitude: longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <Marker
-              coordinate={{ latitude: latitude, longitude: longitude }}
-              title="Endereço da Gráfica"
-            />
-          </MapView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <Text style={styles.title}>Endereço:</Text>
+        <View style={styles.containerEndereço}>
+          <Text style={styles.subtitle} selectable>
+            R. Mora, 1277 - Campo Grande, Rio de Janeiro - RJ, 23052-510
+            <TouchableOpacity onPress={openWaze}>
+              <Text style={styles.wazeText}>Abrir no Waze?</Text>
+            </TouchableOpacity>
+          </Text>
         </View>
-      </ImageBackground>
 
-      <Text style={styles.title}>Contatos:</Text>
+        <ImageBackground style={styles.bgMapa} source={bgMapa} >
+          <View style={styles.mapContainer}>
+            <MapView
+              zoomEnabled
+              style={styles.map}
+              initialRegion={{
+                latitude: latitude,
+                longitude: longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            >
+              <Marker
+                coordinate={{ latitude: latitude, longitude: longitude }}
+                title="Endereço da Gráfica"
+              />
+            </MapView>
+          </View>
+        </ImageBackground>
 
-      <View style={styles.containerContatos}>
-        <OpenURLButton
-          imgSource={buttonWpp}
-          url={stringWpp}
-        />
-        <OpenURLButton
-          imgSource={buttonInstagram}
-          url={stringInsta}
-        />
-        <OpenURLButton
-          imgSource={buttonFB}
-          url={stringFB}
-        />
-        <OpenURLButton
-          imgSource={buttonSite}
-          url={stringSite}
-        />
-      </View>
-
+        <Text style={styles.title}>Contatos:</Text>
+        <View style={styles.containerContatos}>
+          <OpenURLButton
+            imgSource={buttonWpp}
+            url={stringWpp}
+          />
+          <OpenURLButton
+            imgSource={buttonInstagram}
+            url={stringInsta}
+          />
+          <OpenURLButton
+            imgSource={buttonFB}
+            url={stringFB}
+          />
+          <OpenURLButton
+            imgSource={buttonSite}
+            url={stringSite}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

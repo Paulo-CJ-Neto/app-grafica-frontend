@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState, } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import {
   View,
   Text,
@@ -8,19 +8,18 @@ import {
   TouchableOpacity,
   ScrollView,
   RefreshControl,
-} from "react-native";
-import { Icon } from "react-native-elements";
+} from "react-native"
+import { Icon } from "react-native-elements"
 
-import { ClientContext } from "../contexts/clientContext";
+import { ClientContext } from "../contexts/clientContext"
 import { AdressContext } from "../contexts/adressContext"
-import axios from "axios";
-import { useFocusEffect } from "@react-navigation/native";
-import { EXPO_PUBLIC_API_URL as API_URL } from '@env'
+import axios from "axios"
+import { useFocusEffect } from "@react-navigation/native"
+import { EXPO_PUBLIC_API_URL as API_URL } from "@env"
 
-const fotoPerfil = require('./../../assets/imgs/perfil/eu_na_bis.jpg')
+const fotoPerfil = require("./../../assets/imgs/perfil/eu_na_bis.jpg")
 
-const Perfil = props => {
-
+const Perfil = (props) => {
   const { client, setClient } = useContext(ClientContext)
   const { adress, setAdress } = useContext(AdressContext)
 
@@ -32,23 +31,16 @@ const Perfil = props => {
     }, [])
   )
 
-  // useEffect(() => {
-  //   if (!isRefreshed) {
-  //     onRefresh()
-  //     setIsRefreshed(true)
-  //   }
-  // }, [adress, client])
-
   const onRefresh = async () => {
     setRefreshing(true)
     try {
-      const { clientBD, enderecoBD } = await fetchClient();
-      setClient(clientBD || {});
-      setAdress(enderecoBD || {});
+      const { clientBD, enderecoBD } = await fetchClient()
+      setClient(clientBD || {})
+      setAdress(enderecoBD || {})
     } catch (err) {
-      console.error("Erro ao buscar dados:", err);
+      console.error("Erro ao buscar dados:", err)
     } finally {
-      setRefreshing(false);
+      setRefreshing(false)
     }
   }
 
@@ -59,28 +51,28 @@ const Perfil = props => {
       const clientBD = response.data
       infos.clientBD = clientBD
     } catch (err) {
-      console.error("ta no erro do cliente", err.response.data);
+      console.error("Erro ao buscar cliente:", err.response?.data)
     }
 
     if (client.enderecoId) {
       try {
-        const response = await axios.get(`${API_URL}/api/endereco/${client.enderecoId}`)
+        const response = await axios.get(
+          `${API_URL}/api/endereco/${client.enderecoId}`
+        )
         const enderecoBD = response.data
         infos.enderecoBD = enderecoBD
       } catch (err) {
-        console.error("ta no erro do endereco", err.response.data);
+        console.error("Erro ao buscar endereço:", err.response?.data)
       }
     }
 
     return infos
   }
 
-
-
   const dataClient = {
     name: client.nome,
     cpf: client.cpf || "",
-    telefone: client.telefone || ""
+    telefone: client.telefone || "",
   }
 
   const dataAdress = {
@@ -95,41 +87,64 @@ const Perfil = props => {
 
   return (
     <ScrollView
+      contentContainerStyle={styles.scrollContent}
       refreshControl={
-        <RefreshControl
-          refreshing={refreshing} onRefresh={onRefresh}
-        />
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
       <View style={styles.container}>
         <Image source={fotoPerfil} style={styles.img} />
 
-        <Text style={styles.viewField}> <Text style={styles.textBold}>Nome: </Text>
+        <Text style={styles.viewField}>
+          <Text style={styles.textBold}>Nome: </Text>
           {dataClient.name}
         </Text>
-        <Text style={styles.viewField}> <Text style={styles.textBold}>CPF: </Text>
+        <Text style={styles.viewField}>
+          <Text style={styles.textBold}>CPF: </Text>
           {dataClient.cpf}
         </Text>
-        <Text style={styles.viewField}> <Text style={styles.textBold}>Telefone: </Text>
+        <Text style={styles.viewField}>
+          <Text style={styles.textBold}>Telefone: </Text>
           {dataClient.telefone}
         </Text>
 
         <View style={styles.viewField}>
           <Text style={styles.textBold}>Endereço de entrega:</Text>
           <View style={styles.endereco}>
-            <Text ><Text style={styles.textBold}>Cidade: </Text>{dataAdress.city}</Text>
-            <Text><Text style={styles.textBold}>UF: </Text>{dataAdress.uf}</Text>
-            <Text><Text style={styles.textBold}>Rua: </Text>{dataAdress.street}</Text>
-            <Text><Text style={styles.textBold}>Bairro: </Text>{dataAdress.neighborhood}</Text>
-            <Text><Text style={styles.textBold}>Numero: </Text>{dataAdress.number}</Text>
-            <Text><Text style={styles.textBold}>CEP: </Text>{dataAdress.cep}</Text>
-            <Text><Text style={styles.textBold}>Complemento: </Text>{dataAdress.complement}</Text>
+            <Text>
+              <Text style={styles.textBold}>Cidade: </Text>
+              {dataAdress.city}
+            </Text>
+            <Text>
+              <Text style={styles.textBold}>UF: </Text>
+              {dataAdress.uf}
+            </Text>
+            <Text>
+              <Text style={styles.textBold}>Rua: </Text>
+              {dataAdress.street}
+            </Text>
+            <Text>
+              <Text style={styles.textBold}>Bairro: </Text>
+              {dataAdress.neighborhood}
+            </Text>
+            <Text>
+              <Text style={styles.textBold}>Numero: </Text>
+              {dataAdress.number}
+            </Text>
+            <Text>
+              <Text style={styles.textBold}>CEP: </Text>
+              {dataAdress.cep}
+            </Text>
+            <Text>
+              <Text style={styles.textBold}>Complemento: </Text>
+              {dataAdress.complement}
+            </Text>
           </View>
         </View>
 
         <TouchableOpacity
           style={styles.containerLogout}
-          onPress={() => props.navigation.navigate('Login')}
+          onPress={() => props.navigation.navigate("Login")}
         >
           <Text style={styles.logout}>Sair</Text>
           <Icon name="logout" />
@@ -140,52 +155,57 @@ const Perfil = props => {
 }
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
     padding: 30,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    justifyContent: "flex-start",
+    alignItems: "center",
     flex: 1,
-    backgroundColor: '#FDFDFD'
+    backgroundColor: "#FDFDFD",
   },
   img: {
     height: 200,
     width: 200,
-    borderRadius: 100
+    borderRadius: 100,
   },
   viewField: {
     borderRadius: 10,
-    backgroundColor: '#EBEBEB',
+    backgroundColor: "#EBEBEB",
     padding: 10,
-    width: Dimensions.get('window').width - 60,
+    width: Dimensions.get("window").width - 60,
     marginTop: 16,
-    overflow: 'hidden',
-    fontFamily: 'Poppins-Light',
+    overflow: "hidden",
+    fontFamily: "Poppins-Light",
     fontSize: 16,
   },
   textBold: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 16
+    fontFamily: "Poppins-Medium",
+    fontSize: 16,
   },
   endereco: {
     marginTop: 8,
     marginLeft: 16,
   },
   containerLogout: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 10,
-    width: (Dimensions.get('window').width - 60) / 3,
-    backgroundColor: '#FF8686',
-    overflow: 'hidden',
+    width: (Dimensions.get("window").width - 60) / 3,
+    backgroundColor: "#FF8686",
+    overflow: "hidden",
     borderRadius: 10,
     marginTop: 40,
-    flexDirection: 'row'
+    flexDirection: "row",
   },
   logout: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: "Poppins-Bold",
     fontSize: 16,
-    marginRight: 10
-  }
+    marginRight: 10,
+  },
 })
 
 export default Perfil
