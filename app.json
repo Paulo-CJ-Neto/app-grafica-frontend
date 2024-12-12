@@ -19,14 +19,44 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.paulocjneto.appgrafica"
+      "bundleIdentifier": "com.paulocjneto.appgrafica",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
+        "LSApplicationQueriesSchemes": [
+          "whatsapp",
+          "instagram",
+          "waze",
+          "https"
+        ]
+      }
     },
     "android": {
+      "permissions": ["INTERNET"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/imgs/logo3.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.paulocjneto.appgrafica"
+      "package": "com.paulocjneto.appgrafica",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "www.instagram.com"
+            },
+            {
+              "scheme": "instagram"
+            },
+            {
+              "scheme": "waze"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/imgs/logo3.png"
