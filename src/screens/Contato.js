@@ -6,6 +6,7 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
+  ScrollView,
   Linking,
   Alert,
 } from 'react-native';
@@ -57,39 +58,38 @@ const OpenURLButton = ({ url, imgSource }) => {
 
 const Contato = () => {
   return (
-    <SafeAreaView>
-      <Text style={styles.title}>Endereço:</Text>
-      <View style={styles.containerEndereço}>
-        <Text style={styles.subtitle} selectable>
-          R. Mora, 1277 - Campo Grande, Rio de Janeiro - RJ, 23052-510
-          <TouchableOpacity onPress={openWaze}>
-            <Text style={styles.wazeText}>Abrir no Waze?</Text>
-          </TouchableOpacity>
-        </Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <Text style={styles.title}>Endereço:</Text>
+        <View style={styles.containerEndereço}>
+          <Text style={styles.subtitle} selectable>
+            R. Mora, 1277 - Campo Grande, Rio de Janeiro - RJ, 23052-510
+            <TouchableOpacity onPress={openWaze}>
+              <Text style={styles.wazeText}>Abrir no Waze?</Text>
+            </TouchableOpacity>
+          </Text>
+        </View>
 
-      </View>
-
-      <Text style={styles.title}>Contatos:</Text>
-
-      <View style={styles.containerContatos}>
-        <OpenURLButton
-          imgSource={buttonWpp}
-          url={stringWpp}
-        />
-        <OpenURLButton
-          imgSource={buttonInstagram}
-          url={stringInsta}
-        />
-        <OpenURLButton
-          imgSource={buttonFB}
-          url={stringFB}
-        />
-        <OpenURLButton
-          imgSource={buttonSite}
-          url={stringSite}
-        />
-      </View>
-
+        <Text style={styles.title}>Contatos:</Text>
+        <View style={styles.containerContatos}>
+          <OpenURLButton
+            imgSource={buttonWpp}
+            url={stringWpp}
+          />
+          <OpenURLButton
+            imgSource={buttonInstagram}
+            url={stringInsta}
+          />
+          <OpenURLButton
+            imgSource={buttonFB}
+            url={stringFB}
+          />
+          <OpenURLButton
+            imgSource={buttonSite}
+            url={stringSite}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
